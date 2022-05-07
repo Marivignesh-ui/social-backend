@@ -6,10 +6,10 @@ const jwt = require("jsonwebtoken");
 router.post("/register", async (req, res) => {
     try {
         let userCheck = await User.findOne({email:req.body.email});
-        !userCheck && res.status(401).json({ok:false,message:"Email Id registered already!! Please Login"});
+        userCheck && res.status(401).json({ok:false,message:"Email Id registered already!! Please Login"});
 
         userCheck = await User.findOne({username: req.body.username});
-        !userCheck && res.status(401).json({ok: false,message:"Username already taken please try with different one"});
+        userCheck && res.status(401).json({ok: false,message:"Username already taken please try with different one"});
 
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
@@ -51,7 +51,7 @@ router.post("/login", async (req,res) => {
                 const token = jwt.sign({
                     userId:user._id,email:user.email
                 },process.env.TOKEN_KEY,{
-                    expiresIn:"1m"
+                    expiresIn:"10m"
                 });
                 res.status(200).json({ok:true,message:"Authentication successfull",responseObject:token});
             }else{
