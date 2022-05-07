@@ -7,6 +7,7 @@ const morgan = require("morgan");
 const userRoute = require("./routes/userRouter");
 const authRoute = require("./routes/authRouter");
 const postRoute = require("./routes/postRouter");
+const forumRoute = require("./routes/ForumRouter");
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(morgan("common"));
 app.use("/api/users",userRoute);
 app.use("/api/auth",authRoute);
 app.use("/api/post",postRoute);
+app.use("/api/forums",forumRoute);
 
 app.listen(8800,()=>{
     console.log("Backend serverr is running!");

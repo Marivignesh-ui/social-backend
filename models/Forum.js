@@ -10,6 +10,14 @@ const ForumSchema = new mongoose.Schema(
             type: String,
             required: true
         },
+        displayPicUrl:{
+            type:String,
+            default:""
+        },
+        coverPicUrl:{
+            type:String,
+            default:""
+        },
         members:{
             type:Array,
             default:[]
