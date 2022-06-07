@@ -28,14 +28,16 @@ router.post("/register", async (req, res) => {
             user_id: user._id,
             email: user.email
         }, process.env.TOKEN_KEY,{
-            expiresIn: "10m"
+            expiresIn: "7d"
         });
 
         user.token=token;
+        res.header("Access-Control-Allow-Origin", "*");
         res.status(200).json({ok:true,message:"User registration success!!",responseObject:{token,...user._doc}});
 
     } catch (err) {
         console.log(err);
+        res.header("Access-Control-Allow-Origin", "*");
         res.status(500).send(err);
     }
 });
@@ -47,21 +49,24 @@ router.post("/login", async (req,res) => {
         if(user){
             const validpassword = await bcrypt.compare(req.body.password,user.password);
 
+            console.log(req);
+            res.header("Access-Control-Allow-Origin", "*");
             if(validpassword){
                 const token = jwt.sign({
                     userId:user._id,email:user.email
                 },process.env.TOKEN_KEY,{
-                    expiresIn:"10m"
+                    expiresIn:"7d"
                 });
-                res.status(200).json({ok:true,message:"Authentication successfull",responseObject:token});
+                res.status(200).json({ok:true,message:"Authentication successfull",responseObject:{token,user:user._doc}});
             }else{
                 res.status(401).json({ok:false,message:"Password incorrect"});
             }
         }else{
-            res.status(400).json({ok:false,message:"user Id or email is invalid"});
+            res.status(200).json({ok:false,message:"user Id or email is invalid"});
         }
     }catch(err){
         console.log(err);
+        res.header("Access-Control-Allow-Origin", "*");
         res.status(500).send(err);
     }
 });

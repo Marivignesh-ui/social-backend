@@ -65,7 +65,8 @@ router.post("/upload", verifyToken, async (req,res) => {
             postType: req.body.postType,
             postUrl: req.body.postUrl,
             tags: req.body.tags,
-            forum: req.body.forum
+            forum: req.body.forum,
+            contents: req.body.contents
         })
         
         const post = await newPost.save();

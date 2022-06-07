@@ -5,6 +5,10 @@ const PostSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    contents: {
+        type: String,
+        default: ""
+    },
     owner: {
         type: String,
         required: true
@@ -18,8 +22,8 @@ const PostSchema = new mongoose.Schema({
         required: true
     },
     postUrl: {
-        type: String,
-        required: true
+        type: Array,
+        default: []
     },
     likes: {
         type: Array,
