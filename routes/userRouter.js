@@ -6,6 +6,7 @@ router.get("/user/:id", verifyToken, async (req,res)=>{
     try{
         const user = await User.findById(req.params.id);
         !user && res.status(404).json({ok:false,message:"No user found with given credential"});
+        if(!user) return;
         const {password, ...others}=user._doc;
         res.status(200).json({ok:true,message:"user retrieved successfully",responseObject:others});
     }catch(err){

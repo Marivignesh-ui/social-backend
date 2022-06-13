@@ -12,19 +12,26 @@ router.get("/home", verifyToken, async (req,res) => {
             res.status(200).json({ok:false,message:"follow someone or join in a forum to view posts from them"});
         }else{
             let followingPosts=[];
-
-            followingPosts = await Promise.all(
+            let followingPost=await Promise.all(
                 user.followings.map((id) => {
                     return Post.find({owner:id}).exec();
                 })
-            ); 
-            console.log(followingPosts);
-            let forumPosts = await Promise.all(
+            );
+            followingPost.forEach(f => {
+                f.forEach(f1=>{
+                    followingPosts.push(f1);
+                })
+            });
+            const forumPosts = await Promise.all(
                 user.forumsJoined.map((id) => {
                     return Post.find({forum: id}).exec();
                 })
             );
-            followingPosts.push(forumPosts);
+            forumPosts.forEach(f =>{
+                f.forEach(f1 => {
+                    followingPosts.push(f1);
+                })
+            });
 
             res.status(200).json({ok:true,message:"successfully retrieved post",responseObject:followingPosts});
         }
@@ -129,5 +136,15 @@ router.post("/:id/comment", verifyToken, async (req,res) => {
         res.status(500).send(error);
     }
 });
+
+router.get("/:id/getcomments", verifyToken , async (req,res) => {
+    try {
+        const comments = await Comment.find({post:req.params.id}).exec();
+        res.status(200).json({ok:true,message:"comments retrieved successfully",responseObject: comments})
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(error);
+    }
+})
 
 module.exports = router;

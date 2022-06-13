@@ -4,6 +4,7 @@ const Forum = require("../models/Forum");
 const User = require("../models/User");
 const verifyToken = require("./TokenAuth");
 
+//get forum by id
 router.get("/forum/:id", async (req,res) => {
     try {
         const forum = await Forum.findById(req.params.id);
@@ -14,6 +15,7 @@ router.get("/forum/:id", async (req,res) => {
     }
 });
 
+//get forums joined by particular user
 router.get("/user", async (req,res) => {
     try {
         const user = await User.findById(req.query.id);
@@ -34,10 +36,24 @@ router.get("/user", async (req,res) => {
     }
 });
 
+//find forums by category
 router.get("/category", async (req,res) => {
     try {
-        const forum = await Forum.find({$In:{category:req.query.cat}}).exec();
-        console.log(forum);
+        let forum;
+        let categories = req.query.cat.split(" ");
+        let category = ".*";
+        for(let i=0;i<categories.length;i++){
+            category+=categories[i]+".*";
+        }
+        console.log(category);
+        if(req.query.cat==="general"){
+            console.log("Went in general");
+            forum = await Forum.find({}).exec();
+        }else{
+            console.log("wemt in category")
+            forum = await Forum.find({category:{$regex: category, $options: 'i'}}).exec();
+        }
+        // console.log(forum);
         res.status(200).json({ok:true,message:"retrieved forums successfully",responseObject:forum});
     } catch (error) {
         console.log(error);
@@ -45,6 +61,7 @@ router.get("/category", async (req,res) => {
     }
 });
 
+//find forums by tags
 router.get("/tags", async (req,res) => {
     try {
         const forum = await Forum.find({$In:{tags:req.query.tag}}).exec();
@@ -56,6 +73,7 @@ router.get("/tags", async (req,res) => {
     }
 });
 
+//create a forum
 router.post("/forum", verifyToken,  async (req,res) => {
     try {
         let newForum = new Forum({
@@ -75,6 +93,7 @@ router.post("/forum", verifyToken,  async (req,res) => {
     }
 });
 
+//join a forum
 router.put("/join/:id", verifyToken, async (req,res) => {
     try {
         const forum = await Forum.findById(req.params.id);
@@ -93,6 +112,7 @@ router.put("/join/:id", verifyToken, async (req,res) => {
     }
 });
 
+//leave a forum
 router.put("/leave/:id", verifyToken, async (req,res) => {
     try {
         const forum = await Forum.findById(req.params.id);
@@ -111,6 +131,7 @@ router.put("/leave/:id", verifyToken, async (req,res) => {
     }
 });
 
+//make user as admin
 router.put("/makeadmin/:id", verifyToken, async (req,res) => {
     try {
         const forum = await Forum.findById(req.params.id);

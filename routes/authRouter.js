@@ -6,10 +6,16 @@ const jwt = require("jsonwebtoken");
 router.post("/register", async (req, res) => {
     try {
         let userCheck = await User.findOne({email:req.body.email});
-        userCheck && res.status(401).json({ok:false,message:"Email Id registered already!! Please Login"});
+        userCheck && res.status(200).json({ok:false,message:"Email Id registered already!! Please Login"});
+        if(userCheck){
+            return;
+        }
 
         userCheck = await User.findOne({username: req.body.username});
-        userCheck && res.status(401).json({ok: false,message:"Username already taken please try with different one"});
+        userCheck && res.status(200).json({ok: false,message:"Username already taken please try with different one"});
+        if(userCheck){
+            return;
+        }
 
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(req.body.password, salt);
@@ -30,14 +36,11 @@ router.post("/register", async (req, res) => {
         }, process.env.TOKEN_KEY,{
             expiresIn: "7d"
         });
-
-        user.token=token;
-        res.header("Access-Control-Allow-Origin", "*");
-        res.status(200).json({ok:true,message:"User registration success!!",responseObject:{token,...user._doc}});
+        
+        res.status(200).json({ok:true,message:"User registration success!!",responseObject:{token,user:user._doc}});
 
     } catch (err) {
         console.log(err);
-        res.header("Access-Control-Allow-Origin", "*");
         res.status(500).send(err);
     }
 });
