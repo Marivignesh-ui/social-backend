@@ -17,6 +17,8 @@ app.use(cors({origin:"*"}));
 
 dotenv.config();
 
+const PORT = process.env.PORT || 8800;
+
 mongoose.connect(process.env.MONGO_URL,{useNewUrlParser: true},()=>{
     console.log("connected to mongodb");
 }); 
@@ -47,6 +49,10 @@ app.use("/api/forums",forumRoute);
 app.use("/api/conversations", conversationRoute);
 app.use("/api/messages", messageRoute);
 
-app.listen(8800,()=>{
+app.get("/",(req,res)=>{
+    res.send("server is running")
+});
+
+app.listen(PORT,()=>{
     console.log("Backend serverr is running!");
 });
