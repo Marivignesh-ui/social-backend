@@ -22,11 +22,11 @@ const UserSchema = new mongoose.Schema(
         },
         profilePicture:{
             type:String,
-            default:""
+            default:"/no_avatar_TYi8DXgbZ.png"
         },
         coverPicture:{
             type:String,
-            default:""
+            default:"/forum_cover_pic1_ahfvSCfAo.jpg"
         },
         followers:{
             type:Array,
@@ -38,7 +38,8 @@ const UserSchema = new mongoose.Schema(
         },
         desc:{
             type:String,
-            max:500
+            max:500,
+            default:""
         },
         interests:{
             type:Array,
@@ -47,6 +48,10 @@ const UserSchema = new mongoose.Schema(
         forumsJoined:{
             type:Array,
             default:[]
+        },
+        occupation: {
+            type:String,
+            default:""
         }
     },
     {timestamps: true}

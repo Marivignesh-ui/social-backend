@@ -48,11 +48,8 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req,res) => {
     try{
         const user= await User.findOne({email:req.body.email});
-        console.log(user);
         if(user){
             const validpassword = await bcrypt.compare(req.body.password,user.password);
-
-            console.log(req);
             res.header("Access-Control-Allow-Origin", "*");
             if(validpassword){
                 const token = jwt.sign({

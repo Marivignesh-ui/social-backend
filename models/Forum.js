@@ -12,11 +12,11 @@ const ForumSchema = new mongoose.Schema(
         },
         displayPicUrl:{
             type:String,
-            default:""
+            default:"/forum_avatar_fvHjRTolz.png"
         },
         coverPicUrl:{
             type:String,
-            default:""
+            default:"/forum_cover_pic_Sgvs8hp8d.png"
         },
         members:{
             type:Array,
